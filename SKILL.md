@@ -23,7 +23,7 @@ Requires `allow_remote_control yes` in kitty.conf, `python3`, and `timeout` (sto
 - Claude Code's Bash tool has no controlling tty, so `kitten @ …` fails with `open /dev/tty: device not configured`.
 
 ## How flip.sh works around it
-1. It walks up the process tree to the nearest ancestor that has a tty (for example `ttys024`). That is the kitty window running this session.
+1. It walks up the process tree to the nearest ancestor that has a tty (for example `ttysNNN`). That is the kitty window running this session.
 2. It runs `kitten @ launch --type=background --allow-remote-control flip.sh --relight <mode>` inside `script -q /dev/null` (a fake pty), so kitten prints its `ESC P @kitty-cmd{json} ESC \` sequence, which the script captures.
 3. It sets `"no_response": true` in that JSON. **This is required**: otherwise kitty's reply arrives as keystrokes in the session's input.
 4. It writes the sequence to the ancestor tty. kitty reads it as program output and runs the command, which spawns the background helper with real remote-control access.
@@ -34,7 +34,7 @@ Requires `allow_remote_control yes` in kitty.conf, `python3`, and `timeout` (sto
 |---|---|
 | Writing a big burst of raw set-colors escapes, one per guessed ID (1..400), to the tty | Some windows were silently missed. Use the launched helper with real IDs instead |
 | Leaving `no_response` false | kitty's reply gets injected as typed input |
-| Assuming every theme has a `cursor` line | `light-one-half`, `light-papercolor` don't have one, so `set-tab-color` fails with "is not a valid color" |
+| Assuming every theme has a `cursor` line | `dark-one-half` and `light-one-half` don't have one, so `set-tab-color` fails with "is not a valid color" |
 | Claiming success without reading the log | The log is the only evidence. You can't see the screen, so ask the user to confirm |
 
 If a window still looks wrong after a clean log, the program running inside it (vim, a TUI, Claude Code's own theme) is probably drawing its own background.

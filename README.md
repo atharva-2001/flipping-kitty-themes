@@ -27,8 +27,8 @@ flip.sh dark      # every open window → a random dark theme
 flip.sh toggle    # the opposite of the last flip
 ```
 
-Every window gets its own theme, and its tab is tinted to match. The script prints one line per window
-and then `done`, so a person or an agent can confirm it worked.
+Every window gets its own theme, and its tab is tinted to match. The script prints one line per window,
+then `done`, then any errors under `--- errors:`. No errors block means it worked.
 
 ## Why this exists
 
@@ -68,7 +68,8 @@ use the skill and how.
 
 ### As a plain script
 
-Clone it anywhere and run `./flip.sh light`.
+Clone it anywhere and run `./flip.sh light` from a shell that kitty started (directly, or through an agent
+running inside a kitty window). It won't work from Terminal.app or another terminal.
 
 > [!TIP]
 > **Let your agent set it up.** Paste this into your coding agent:
@@ -88,6 +89,7 @@ Clone it anywhere and run `./flip.sh light`.
 | macOS + kitty at `/Applications/kitty.app` | `flip.sh` calls kitty's bundled `kitten` |
 | `allow_remote_control yes` in `kitty.conf` | The background helper uses remote control |
 | Themes in `~/.config/kitty/themes/` named `light-*.conf` / `dark-*.conf` | The pool it picks from ([kitty-but-like-iterm](https://github.com/atharva-2001/kitty-but-like-iterm) ships 26) |
+| Run from inside kitty | It finds kitty through the nearest parent process that has a kitty tty |
 | `python3` | Captures and rewrites the escape sequence |
 | `timeout` | Not on stock macOS: `brew install coreutils` |
 

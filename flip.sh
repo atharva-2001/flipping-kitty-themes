@@ -51,10 +51,10 @@ done
 [[ -n $tty ]] || { echo "no kitty tty found among ancestors"; exit 1; }
 
 rm -f "$STATE/log.txt"
-python3 - "${0:A}" "$mode" "$tty" <<'PY' || exit 1
+python3 - "${0:A}" "$mode" "$tty" "$K" <<'PY' || exit 1
 import json, re, subprocess, sys
-script, mode, tty = sys.argv[1:]
-out = subprocess.run(['timeout', '2', 'script', '-q', '/dev/null', 'kitten', '@', 'launch',
+script, mode, tty, kitten = sys.argv[1:]
+out = subprocess.run(['timeout', '2', 'script', '-q', '/dev/null', kitten, '@', 'launch',
                       '--type=background', '--allow-remote-control', script, '--relight', mode],
                      stdin=subprocess.DEVNULL, capture_output=True).stdout.decode()
 m = re.search(r'kitty-cmd(\{.*\})\x1b\\', out)
